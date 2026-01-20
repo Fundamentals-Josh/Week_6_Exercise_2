@@ -206,7 +206,7 @@ tail(HumDevIndx,25)
 #Life expectancy at birth (rounded to 2 decimal places)
 #Expected years of schooling (rounded to 2 decimal places)
 #Mean years of schooling(rounded to 2 decimal places)
-#Gross national income (GNI) per capita (rounded to 2 decimal places)
+#Gross national income (GNI) per capita (rounded to 0 decimal places)
 
 
 round(mean(HumDevIndx$`Life expectancy at birth`, na.rm = TRUE), 2)
