@@ -1,0 +1,217 @@
+---
+title: An R Markdown document converted from "Homework_6_Part_2.ipynb"
+output: html_document
+---
+
+```{r}
+rm(list=ls())  #start fresh
+```
+
+
+```
+```{r set-cran-mirror}
+options(repos = "https://cloud.r-project.org")
+
+```
+```{r}
+#the above code was necessary to run the knit process so that r knows where to download the packages from.
+```
+```
+
+
+
+
+```{r}
+install.packages("openxlsx") #install the package needed to read the file
+```
+
+```{r}
+#access the library to read the file
+library(openxlsx)
+```
+
+```{r}
+#read the file
+HumDevIndx = read.xlsx("https://github.com/Fundamentals-Josh/Week_6_Exercise_2/raw/refs/heads/main/HDR25_Statistical_Annex_HDI_Table.xlsx")
+```
+
+```{r}
+#show the head for examination (10 rows)
+head(HumDevIndx,10)
+```
+
+```{r}
+#delete unecessary columns and show execution
+HumDevIndx$X5 <- NULL
+HumDevIndx$X7 <- NULL
+HumDevIndx$X9 <- NULL
+HumDevIndx$X11 <- NULL
+HumDevIndx$X13 <- NULL
+
+head(HumDevIndx,3)
+```
+
+```{r}
+# Read the file again, this time without assuming headers initially.
+# This ensures column names are generic (V1, V2, etc.) before we explicitly set them.
+HumDevIndx = read.xlsx("https://github.com/Fundamentals-Josh/Week_6_Exercise_2/raw/refs/heads/main/HDR25_Statistical_Annex_HDI_Table.xlsx", colNames = FALSE)
+
+# Delete unnecessary columns first using numeric indices.
+# delete columns 5, 7, 9, 11, 13.
+HumDevIndx <- HumDevIndx[, -c(5, 7, 9, 11, 13)]
+
+# Manually define the correct header names based on the original row 2 and the columns kept.
+# This prevents issues where HumDevIndx[2, ] might contain data values or NA's.
+correct_headers <- c(
+  "2023 HDI rank",
+  "Country",
+  "Human Development Index (HDI)",
+  "Life expectancy at birth",
+  "Expected years of schooling",
+  "Mean years of schooling",
+  "Gross national income (GNI) per capita",
+  "GNI per capita rank minus HDI rank",
+  "HDI rank"
+)
+
+# Assign these as the new column names
+colnames(HumDevIndx) <- correct_headers
+
+# Trim whitespace from all column names to ensure exact matches for future operations.
+names(HumDevIndx) <- trimws(names(HumDevIndx))
+
+# Now, remove the metadata rows. Original rows 1 (table title), 3 (category title),
+# and 4 (a duplicate 'HDI rank' header), 5 (metadata year), and 6 (region/group) are no longer needed as data rows.
+# Since we used original row 2 as headers, we now remove current rows 1, 2, 3, 4, 5, 6.
+HumDevIndx <- HumDevIndx[-c(1:6), ]
+
+# Reset the row names to be a continuous sequence starting from 1.
+rownames(HumDevIndx) <- NULL
+
+# Ensure dplyr is loaded for next stpes
+library(dplyr)
+
+# Convert specified columns to integer
+HumDevIndx <- HumDevIndx %>%
+  mutate(
+    `2023 HDI rank` = as.integer(`2023 HDI rank`),
+    `GNI per capita rank minus HDI rank` = as.integer(`GNI per capita rank minus HDI rank`)
+  )
+
+# Ensure 'Country' is character type
+HumDevIndx$Country <- as.character(HumDevIndx$Country)
+
+# Identify columns to convert to numeric (double to preserve decimal places)
+numeric_cols <- c(
+  "Human Development Index (HDI)",
+  "Life expectancy at birth",
+  "Expected years of schooling",
+  "Mean years of schooling",
+  "Gross national income (GNI) per capita"
+)
+
+# Apply as.double to these columns. Adding a gsub for 'Human Development Index (HDI)'
+# to remove any non-numeric characters (like hidden spaces) that might prevent proper conversion.
+HumDevIndx <- HumDevIndx %>%
+  mutate(
+    `Human Development Index (HDI)` = as.double(gsub("[^0-9.]", "", `Human Development Index (HDI)`)),
+    across(all_of(setdiff(numeric_cols, "Human Development Index (HDI)")), as.double)
+  )
+
+# Round specified numeric columns to two decimal places for display purposes
+HumDevIndx <- HumDevIndx %>%
+  mutate(
+    `Human Development Index (HDI)` = round(`Human Development Index (HDI)`, 2),
+    `Life expectancy at birth` = round(`Life expectancy at birth`, 2),
+    `Expected years of schooling` = round(`Expected years of schooling`, 2),
+    `Mean years of schooling` = round(`Mean years of schooling`, 2),
+    `Gross national income (GNI) per capita` = round(`Gross national income (GNI) per capita`, 2)
+  )
+
+# Finally, rename the "HDI rank" column to "2022 HDI rank" as requested, and convert it to integer.
+HumDevIndx <- HumDevIndx %>%
+  rename("2022 HDI rank" = "HDI rank") %>%
+  mutate(`2022 HDI rank` = as.integer(`2022 HDI rank`))
+
+
+#show head and string for verification
+head(HumDevIndx)
+str(HumDevIndx)
+```
+
+```{r}
+library(dplyr) # Ensure dplyr is loaded
+
+# Convert specified columns to integer
+HumDevIndx <- HumDevIndx %>%
+  mutate(
+    `2023 HDI rank` = as.integer(`2023 HDI rank`),
+    `GNI per capita rank minus HDI rank` = as.integer(`GNI per capita rank minus HDI rank`),
+    `2022 HDI rank` = as.integer(`2022 HDI rank`)
+  )
+
+# Ensure 'Country' is character type
+HumDevIndx$Country <- as.character(HumDevIndx$Country)
+
+# Convert other numerical columns to numeric to preserve decimal places
+# This includes 'Human Development Index (HDI)', 'Life expectancy at birth',
+# 'Expected years of schooling', 'Mean years of schooling',
+# and 'Gross national income (GNI) per capita' (for dollars)
+
+# Identify columns to convert to numeric
+numeric_cols <- c(
+  "Human Development Index (HDI)",
+  "Life expectancy at birth",
+  "Expected years of schooling",
+  "Mean years of schooling",
+  "Gross national income (GNI) per capita"
+)
+
+# Apply as.double to these columns. Adding a gsub for 'Human Development Index (HDI)'
+# to remove any non-numeric characters (like hidden spaces) that might prevent proper conversion.
+HumDevIndx <- HumDevIndx %>%
+  mutate(
+    `Human Development Index (HDI)` = as.double(gsub("[^0-9.]", "", `Human Development Index (HDI)`)),
+    across(all_of(setdiff(numeric_cols, "Human Development Index (HDI)")), as.double)
+  )
+
+# To display with 2 decimal places for relevant columns, you'd typically format for output
+# rather than changing the underlying data type. For example:
+# HumDevIndx$`Human Development Index (HDI)` <- round(HumDevIndx$`Human Development Index (HDI)`, 2)
+# The `head()` output might truncate decimal display, but `str()` will confirm the underlying type.
+
+head(HumDevIndx)
+str(HumDevIndx)
+```
+
+```{r}
+# Remove rows where '2023 HDI rank' is NA (blank)
+
+HumDevIndx <- HumDevIndx[!is.na(HumDevIndx$`2023 HDI rank`), ]
+
+# Reset row names to a continuous sequence starting from 1
+rownames(HumDevIndx) <- NULL
+
+# Display the head of the data frame to verify
+head(HumDevIndx)
+```
+
+```{r}
+#show the tail to ensure that the changes made it through the entire data frame
+tail(HumDevIndx,25)
+```
+
+```{r}
+#calculating means:
+#Life expectancy at birth (rounded to 2 decimal places)
+#Expected years of schooling (rounded to 2 decimal places)
+#Mean years of schooling(rounded to 2 decimal places)
+#Gross national income (GNI) per capita (rounded to 2 decimal places)
+
+
+round(mean(HumDevIndx$`Life expectancy at birth`, na.rm = TRUE), 2)
+round(mean(HumDevIndx$`Expected years of schooling`, na.rm = TRUE), 2)
+round(mean(HumDevIndx$'Mean years of schooling', na.rm = TRUE), 2)
+round(mean(HumDevIndx$'Gross national income (GNI) per capita', na.rm = TRUE), 0)
+```
+
