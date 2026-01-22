@@ -209,9 +209,9 @@ tail(HumDevIndx,25)
 #Gross national income (GNI) per capita (rounded to 0 decimal places)
 
 
-round(mean(HumDevIndx$`Life expectancy at birth`, na.rm = TRUE), 2)
-round(mean(HumDevIndx$`Expected years of schooling`, na.rm = TRUE), 2)
-round(mean(HumDevIndx$'Mean years of schooling', na.rm = TRUE), 2)
-round(mean(HumDevIndx$'Gross national income (GNI) per capita', na.rm = TRUE), 0)
+round(mean(HumDevIndx$`Life expectancy at birth`, na.rm = FALSE), 2)
+round(mean(HumDevIndx$`Expected years of schooling`, na.rm = FALSE), 2)
+round(mean(HumDevIndx$'Mean years of schooling', na.rm = FALSE), 2)
+round(mean(HumDevIndx$'Gross national income (GNI) per capita', na.rm = FALSE), 0)
 ```
 

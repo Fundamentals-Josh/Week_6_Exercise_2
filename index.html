@@ -375,7 +375,7 @@ install.packages(&quot;openxlsx&quot;) #install the package needed to read the f
 <pre><code>## Warning: restored &#39;openxlsx&#39;</code></pre>
 <pre><code>## 
 ## The downloaded binary packages are in
-##  C:\Users\jjburton\AppData\Local\Temp\RtmpqeQqB5\downloaded_packages</code></pre>
+##  C:\Users\jjburton\AppData\Local\Temp\RtmpGcYjLH\downloaded_packages</code></pre>
 <pre class="r"><code>#access the library to read the file
 library(openxlsx)</code></pre>
 <pre class="r"><code>#read the file
@@ -863,13 +863,13 @@ tail(HumDevIndx,25)</code></pre>
 #Gross national income (GNI) per capita (rounded to 0 decimal places)
 
 
-round(mean(HumDevIndx$`Life expectancy at birth`, na.rm = TRUE), 2)</code></pre>
+round(mean(HumDevIndx$`Life expectancy at birth`, na.rm = FALSE), 2)</code></pre>
 <pre><code>## [1] 73.11</code></pre>
-<pre class="r"><code>round(mean(HumDevIndx$`Expected years of schooling`, na.rm = TRUE), 2)</code></pre>
+<pre class="r"><code>round(mean(HumDevIndx$`Expected years of schooling`, na.rm = FALSE), 2)</code></pre>
 <pre><code>## [1] 13.58</code></pre>
-<pre class="r"><code>round(mean(HumDevIndx$&#39;Mean years of schooling&#39;, na.rm = TRUE), 2)</code></pre>
+<pre class="r"><code>round(mean(HumDevIndx$&#39;Mean years of schooling&#39;, na.rm = FALSE), 2)</code></pre>
 <pre><code>## [1] 9.17</code></pre>
-<pre class="r"><code>round(mean(HumDevIndx$&#39;Gross national income (GNI) per capita&#39;, na.rm = TRUE), 0)</code></pre>
+<pre class="r"><code>round(mean(HumDevIndx$&#39;Gross national income (GNI) per capita&#39;, na.rm = FALSE), 0)</code></pre>
 <pre><code>## [1] 24621</code></pre>
 
 
