@@ -1,5 +1,5 @@
 ---
-title: "Homework_6_Part_2.ipynb"
+title: "Homework_6_Part_2"
 output: html_document
 ---
 
